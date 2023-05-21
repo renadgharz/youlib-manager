@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Forgot Password</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<h2>Forgot Password</h2>
+		<form>
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email" required>
+			<input type="submit" value="Send Reset Link">
+		</form>
+		<div>
+			<form action="{{ url_for('auth_blueprint.login') }}" method="get" style="display: inline-block; margin-right: 10px;">
+				<button class="btn" type="submit">Back to Login</button>
+			</form>			
+			<form action="{{ url_for('auth_blueprint.signup') }}" method="get" style="display: inline-block;">
+				<button class="btn" type="submit">Go to Signup</button>
+			</form>		
+		</div>
+	</div>
+	<script src="script.js"></script>
+</body>
+</html>

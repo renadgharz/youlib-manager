@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Password Reset Request Page</title>
+	<link rel="stylesheet" type="text/css" href="../static/css/pwd_reset_request.css">
+</head>
+<body>
+	<div class="container">
+		<h2>Password Reset Request</h2>
+		<form method="POST">
+            {{ pwd_reset_request_form.email.label }}
+            {{ pwd_reset_request_form.email() }}
+            {{ pwd_reset_request_form.email.errors }} <br>
+
+            {{ pwd_reset_request_form.submit() }}
+        </form>
+	</div>
+	<script src="../static/js/pwd_reset_request.js"></script>
+</body>
+</html>

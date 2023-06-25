@@ -38,20 +38,10 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-	background-color: #3e8e41;
+	background-color: #1b601d;
 }
 
-.btn {
-	background-color: #008CBA;
-	color: #fff;
-	padding: 10px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	width: 49%;
-	margin-right: 2%;
-}
-
-.btn:last-child {
-	margin-right: 0;
+.bordered:focus {
+    border-color: #007bff;
+    outline: none;
 }

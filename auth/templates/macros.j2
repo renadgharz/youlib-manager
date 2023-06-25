@@ -1,0 +1,20 @@
+{% macro render_auth_form(form) %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        {% for field in form %}
+            {% if field.type != 'CSRFTokenField' %}
+                <div class="form-group">
+                    {% if field.type != 'SubmitField' %}
+                        <label for="{{ field.id }}">{{ field.label }}</label>
+                    {% endif %}
+                    {{ field(class="form-control bordered")|replace("()", "")|replace("[]", "") }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div class="form-error" style="display: none;">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </form>
+{% endmacro %}

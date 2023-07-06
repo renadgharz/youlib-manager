@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 from auth.auth_forms import SignupForm, LoginForm, PasswordResetRequestForm, PasswordResetForm
+from extensions import db
+from models import UserCredentials
 
 
 auth_blueprint = Blueprint('auth_blueprint', __name__,
@@ -13,7 +15,11 @@ def signup():
     form = SignupForm()
     
     if form.validate_on_submit():
-        # add code to send validated data to database
+        form_data = request.form.to_dict()
+        new_user = UserCredentials(**form_data)
+        db.session.add(new_user)    
+        db.session.commit()
+        
         return redirect(url_for('auth_blueprint.login'))
     
     return render_template("signup.html", signup_form=form)

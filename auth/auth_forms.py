@@ -1,19 +1,39 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, validators
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, validators, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Regexp
+from models import User
 
 class SignupForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(message="Field cannot be blank")])
-    email = StringField('Email', validators=[DataRequired(message="Field cannot be blank"), Email(message="Must be a valid example@example.com")])
+    username = StringField('Username', 
+                           validators=[DataRequired(message="Field cannot be blank"), 
+                                                   Length(min=4, max=20)],
+                           render_kw={"placeholder": "Username"})
+    email = StringField('Email', 
+                        validators=[DataRequired(message="Field cannot be blank"), 
+                                             Email(message="Must be a valid example@example.com")],
+                        render_kw={"placeholder": "Email"})
     password = PasswordField('Password', 
                              validators=[DataRequired(message="Field cannot be blank"),
-                                         Regexp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[`~!@#$%^&*()_+-=[]{}|\;:\'\",./<>?])[A-Za-z\d`~!@#$%^&*()_+-=[]{}|\;:\'\",./<>?]{8,}', 
-                                                message="Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"),
-                                         Length(min=8, message="Password must be at least 8 characters long")])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(message="Field cannot be blank"),
+                                         Length(min=8, max=20)],
+                             render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField('Confirm Password', 
+                                     validators=[DataRequired(message="Field cannot be blank"),
                                                                      EqualTo('password', 
-                                                                             message='Passwords must match')])
+                                                                             message='Passwords must match')],
+                                     render_kw={"placeholder": "Confirm Password"})
     submit = SubmitField('Sign up')
+    
+    def validate_username(self, username):
+        existing_username = User.query.filter_by(
+            username=username.data).first()
+        if existing_username:
+            raise ValidationError("The username already exists.")
+    
+    def validate_email(self, email):
+        existing_email = User.query.filter_by(
+            email=email.data).first()
+        if existing_email:
+            raise ValidationError("This email is already exists.")
     
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(message="Field cannot be blank"), Email(message="Must be a valid example@example.com")])

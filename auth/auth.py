@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from auth.auth_forms import SignupForm, LoginForm, PasswordResetRequestForm, PasswordResetForm
-from extensions import db
-from models import UserCredentials
+from extensions import db, hash_password, check_password
+from models import User
 
 
 auth_blueprint = Blueprint('auth_blueprint', __name__,
@@ -15,9 +15,11 @@ def signup():
     form = SignupForm()
     
     if form.validate_on_submit():
-        form_data = request.form.to_dict()
-        new_user = UserCredentials(**form_data)
-        db.session.add(new_user)    
+        new_user = User(username=form.username.data,
+                        email=form.email.data,
+                        password=hash_password(form.password.data))
+        
+        db.session.add(new_user)
         db.session.commit()
         
         return redirect(url_for('auth_blueprint.login'))
@@ -29,8 +31,8 @@ def login():
     form = LoginForm()
     
     if form.validate_on_submit():
-        # grant access to user
-        return redirect(url_for('')) # add route to home page of app blueprint once created
+        if User and check_password(form.password.data, User.password):
+            return redirect(url_for('')) # add route to home page of app blueprint once created
     
     return render_template("login.html", login_form=form)
 

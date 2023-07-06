@@ -1,5 +1,3 @@
-{% import "macros.html" as macros %}
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +7,14 @@
 <body>
 	<div class="container">
 		<h2>Sign Up</h2>
-			{{ macros.render_auth_form(signup_form) }}
+			<form method="POST" action="">
+				{{ signup_form.hidden_tag() }}
+				{{ signup_form.username }}
+				{{ signup_form.email }}
+				{{ signup_form.password }}
+				{{ signup_form.confirm_password }}
+				{{ signup_form.submit }}
+			</form>
 	</div>
 	<script type="text/javascript" src="{{ url_for('auth_blueprint.static', filename='js/signup.js') }}"></script>
 </body>

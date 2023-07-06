@@ -2,22 +2,16 @@ from flask import Flask
 from launch.launch import launch_blueprint
 from auth.auth import auth_blueprint
 from config import config
-
-import logging
-from logging.handlers import RotatingFileHandler
-
+from extensions import db
 
 app = Flask(__name__)
-
 app.config.update(config)
-
 app.register_blueprint(launch_blueprint)
 app.register_blueprint(auth_blueprint, url_prefix = "/auth/")
 
-logging_handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
-logging_handler.setLevel(logging.INFO)
-app.logger.addHandler(logging_handler)
-
+db.init_app(app)
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run()
